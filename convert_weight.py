@@ -110,6 +110,7 @@ def discriminator_fill_statedict(statedict, vars, size):
 
     conv_i = 1
 
+#    for i in range(log_size - 2, 0, -1):
     for i in range(log_size - 2, 0, -1):
         reso = 4 * 2 ** i
         update(
@@ -140,7 +141,10 @@ def discriminator_fill_statedict(statedict, vars, size):
 def fill_statedict(state_dict, vars, size):
     log_size = int(math.log(size, 2))
 
-    for i in range(8):
+#    for i in range(8):
+    print('moe')
+    print(4 * 2 ** (log_size + -1))
+    for i in range(2):
         update(state_dict, convert_dense(vars, f"G_mapping/Dense{i}", f"style.{i + 1}"))
 
     update(
@@ -156,11 +160,12 @@ def fill_statedict(state_dict, vars, size):
 
     for i in range(log_size - 2):
         reso = 4 * 2 ** (i + 1)
+        print(f"G_synthesis/{reso}x{reso}/ToRGB")
         update(
             state_dict,
             convert_torgb(vars, f"G_synthesis/{reso}x{reso}/ToRGB", f"to_rgbs.{i}"),
         )
-
+    print('survived')
     update(state_dict, convert_modconv(vars, "G_synthesis/4x4/Conv", "conv1"))
 
     conv_i = 0
